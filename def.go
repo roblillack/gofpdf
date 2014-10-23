@@ -49,6 +49,10 @@ type PointType struct {
 	X, Y float64
 }
 
+func (p PointType) XY() (float64, float64) {
+	return p.X, p.Y
+}
+
 // ImageInfoType contains size, color and other information about an image
 type ImageInfoType struct {
 	data  []byte
