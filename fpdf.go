@@ -853,10 +853,10 @@ func (f *Fpdf) point(x, y float64) {
 	f.outf("%.2f %.2f m", x*f.k, (f.h-y)*f.k)
 }
 
-// Outputs quadratic curve from current point
-func (f *Fpdf) curve(cx0, cy0, x1, y1, cx1, cy1 float64) {
-	f.outf("%.5f %.5f %.5f %.5f %.5f %.5f c", cx0*f.k, (f.h-cy0)*f.k, x1*f.k,
-		(f.h-y1)*f.k, cx1*f.k, (f.h-cy1)*f.k)
+// Outputs a single cubic Bézier curve segment from current point
+func (f *Fpdf) curve(cx0, cy0, cx1, cy1, x, y float64) {
+	f.outf("%.5f %.5f %.5f %.5f %.5f %.5f c", cx0*f.k, (f.h-cy0)*f.k, cx1*f.k,
+		(f.h-cy1)*f.k, x*f.k, (f.h-y)*f.k)
 }
 
 // Curve draws a single-segment quadratic Bézier curve. The curve starts at
