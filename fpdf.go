@@ -848,6 +848,37 @@ func (f *Fpdf) Polygon(points []PointType, styleStr string) {
 	}
 }
 
+// Beziergon draws a closed figure defined by a series of cubic Bézier curve
+// segments. The first point in the slice defines the starting point of the
+// figure. Each three following points p1, p2, p3 represent a curve segment
+// to the point p3 using p1 and p2 as the Bézier control points.
+//
+// The x and y fields of the points use the units established in New().
+// The last point in the slice will be implicitly joined to the first to close
+// the beziergon.
+//
+// styleStr can be "F" for filled, "D" for outlined only, or "DF" or "FD" for
+// outlined and filled. An empty string will be replaced with "D". Drawing uses
+// the current draw color and line width centered on the ellipse's perimeter.
+// Filling uses the current fill color.
+func (f *Fpdf) Beziergon(points []PointType, styleStr string) {
+	if len(points) < 4 {
+		return
+	}
+	f.point(points[0].XY())
+
+	points = points[1:]
+	for len(points) >= 3 {
+		cx0, cy0 := points[0].XY()
+		cx1, cy1 := points[1].XY()
+		x1, y1 := points[2].XY()
+		f.curve(cx0, cy0, cx1, cy1, x1, y1)
+		points = points[3:]
+	}
+
+	f.outf(fillDrawOp(styleStr))
+}
+
 // Outputs current point
 func (f *Fpdf) point(x, y float64) {
 	f.outf("%.2f %.2f m", x*f.k, (f.h-y)*f.k)
